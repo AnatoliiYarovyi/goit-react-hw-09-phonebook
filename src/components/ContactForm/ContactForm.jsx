@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import style from './ContactForm.module.css';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { contactOperations } from '../../redux/contact';
 
-const ContactForm = ({ addContacts }) => {
+const ContactForm = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
@@ -21,6 +21,14 @@ const ContactForm = ({ addContacts }) => {
         console.warn(`Тип поля name - ${name} не обрабатывается`);
     }
   };
+
+  const dispatch = useDispatch();
+  const addContacts = useCallback(
+    contactForm => {
+      dispatch(contactOperations.addContacts(contactForm));
+    },
+    [dispatch],
+  );
 
   const reset = () => {
     setName('');
@@ -64,8 +72,4 @@ const ContactForm = ({ addContacts }) => {
   );
 };
 
-const mapDispatchToProps = dispatch => ({
-  addContacts: contactForm =>
-    dispatch(contactOperations.addContacts(contactForm)),
-});
-export default connect(null, mapDispatchToProps)(ContactForm);
+export default ContactForm;

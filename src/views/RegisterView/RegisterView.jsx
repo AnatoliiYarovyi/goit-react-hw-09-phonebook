@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import React, { useState, useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 import { authOperations } from '../../redux/auth';
 import style from './RegisterView.module.css';
 
-const RegisterView = ({ onRegister }) => {
+const RegisterView = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -23,6 +23,14 @@ const RegisterView = ({ onRegister }) => {
         console.warn(`Тип поля name - ${name} не обрабатывается`);
     }
   };
+
+  const dispatch = useDispatch();
+  const onRegister = useCallback(
+    data => {
+      dispatch(authOperations.register(data));
+    },
+    [dispatch],
+  );
 
   const reset = () => {
     setName('');
@@ -72,14 +80,4 @@ const RegisterView = ({ onRegister }) => {
   );
 };
 
-// -----Развернутый вариант------------
-// const mapDispatchToProps = dispatch => ({
-//   onRegister: (data) => dispatch(authOperations.register(data))
-// });
-
-// ----- Сокращенный вариант ----------
-const mapDispatchToProps = {
-  onRegister: authOperations.register,
-};
-
-export default connect(null, mapDispatchToProps)(RegisterView);
+export default RegisterView;

@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import style from './LoginView.module.css';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { authOperations } from '../../redux/auth';
 
-const LoginView = ({ onLogin }) => {
+const LoginView = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -19,6 +19,14 @@ const LoginView = ({ onLogin }) => {
         console.warn(`Тип поля name - ${name} не обрабатывается`);
     }
   };
+
+  const dispatch = useDispatch();
+  const onLogin = useCallback(
+    data => {
+      dispatch(authOperations.logIn(data));
+    },
+    [dispatch],
+  );
 
   const reset = () => {
     setEmail('');
@@ -61,8 +69,4 @@ const LoginView = ({ onLogin }) => {
   );
 };
 
-const mapDispatchToProps = {
-  onLogin: authOperations.logIn,
-};
-
-export default connect(null, mapDispatchToProps)(LoginView);
+export default LoginView;

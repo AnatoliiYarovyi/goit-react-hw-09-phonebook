@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect, useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import style from './Contactsview.module.css';
 import ContactForm from '../../components/ContactForm';
 import Filter from '../../components/Filter';
@@ -7,7 +7,13 @@ import ContactList from '../../components/ContactList';
 import contactOperations from '../../redux/contact/contact-operations';
 import { getLoading } from '../../redux/contact/contact-selectors';
 
-const ContactsView = ({ isLoadingContacts, fetchContacts }) => {
+const ContactsView = () => {
+  const isLoadingContacts = useSelector(getLoading);
+  const dispatch = useDispatch();
+  const fetchContacts = useCallback(() => {
+    dispatch(contactOperations.fetchContact());
+  }, [dispatch]);
+
   useEffect(() => {
     fetchContacts();
   }, []);
@@ -24,11 +30,4 @@ const ContactsView = ({ isLoadingContacts, fetchContacts }) => {
   );
 };
 
-const mapStateToProps = state => ({
-  isLoadingContacts: getLoading(state),
-});
-const mapDispatchToProps = dispatch => ({
-  fetchContacts: () => dispatch(contactOperations.fetchContact()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(ContactsView);
+export default ContactsView;

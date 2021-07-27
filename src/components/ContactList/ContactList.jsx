@@ -1,11 +1,20 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { contactOperations } from '../../redux/contact';
 import style from './ContactList.module.css';
 import PropTypes from 'prop-types';
 import { getVisibleContacts } from '../../redux/contact/contact-selectors';
 
-const ContactList = ({ contacts, deleteContacts }) => {
+const ContactList = () => {
+  const contacts = useSelector(getVisibleContacts);
+  const dispatch = useDispatch();
+  const deleteContacts = useCallback(
+    id => {
+      dispatch(contactOperations.deleteContacts(id));
+    },
+    [dispatch],
+  );
+
   return (
     <ul className={style.list}>
       {contacts.map(({ id, name, number }) => (
@@ -36,12 +45,4 @@ ContactList.propTypes = {
   deleteContacts: PropTypes.func,
 };
 
-const mapStateToProps = state => ({
-  contacts: getVisibleContacts(state),
-});
-
-const mapDispatchToProps = dispatch => ({
-  deleteContacts: id => dispatch(contactOperations.deleteContacts(id)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(ContactList);
+export default ContactList;

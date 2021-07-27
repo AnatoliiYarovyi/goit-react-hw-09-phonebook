@@ -1,7 +1,7 @@
 import React, { useEffect, Suspense, lazy } from 'react';
 import { Switch } from 'react-router-dom';
 import { authOperations } from './redux/auth';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import Container from './components/Container';
 import AppBar from './components/AppBar';
 import PrivateRoute from './components/PrivateRoute';
@@ -13,10 +13,12 @@ const RegisterView = lazy(() => import('./views/RegisterView'));
 const LoginView = lazy(() => import('./views/LoginView'));
 const ContactsView = lazy(() => import('./views/ContactsView'));
 
-const App = ({ onGetCurretnUser }) => {
+const App = () => {
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    onGetCurretnUser();
-  }, []);
+    dispatch(authOperations.getCurrentUser());
+  }, [dispatch]);
 
   return (
     <Container>
@@ -47,8 +49,4 @@ const App = ({ onGetCurretnUser }) => {
   );
 };
 
-const mapDispatchToProps = {
-  onGetCurretnUser: authOperations.getCurrentUser,
-};
-
-export default connect(null, mapDispatchToProps)(App);
+export default App;
